@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Интерактивные Диалоги</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="messenger-container">
+        <header class="messenger-header">
+            <div class="header-content">
+                <h1>💬 Интерактивный Чат</h1>
+                <p class="subtitle">Выбирайте ответы — они влияют на исход разговора</p>
+            </div>
+        </header>
+
+        <div class="chat-area">
+            <!-- Персонаж слева (NPC) -->
+            <div class="npc-panel">
+                <div class="npc-avatar-large" id="npc-avatar-container">
+                    <!-- SVG персонаж будет добавлен через JS -->
+                </div>
+                <div class="npc-info">
+                    <div class="npc-name" id="npc-name">Собеседник</div>
+                    <div class="npc-mood" id="npc-mood">😊 Нейтрально</div>
+                </div>
+                <div class="relationship-display">
+                    <span>Отношения:</span>
+                    <div class="mini-meter">
+                        <div class="mini-fill" id="relationship-meter"></div>
+                    </div>
+                    <span id="relationship-value">50%</span>
+                </div>
+            </div>
+
+            <!-- Окно чата -->
+            <div class="chat-window">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Сообщения будут добавляться здесь -->
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="choices-container" id="choices-container">
+                        <!-- Варианты ответов появятся здесь -->
+                    </div>
+                </div>
+
+                <div class="chat-footer">
+                    <button class="btn btn-restart" id="restart-btn">🔄 Заново</button>
+                    <button class="btn btn-scenario" id="scenario-btn">📜 Сценарий</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="scenario-selector" id="scenario-selector">
+            <h3>Выберите сценарий:</h3>
+            <div class="scenario-options">
+                <button class="scenario-option" data-scenario="friendly">🤝 Дружеская беседа</button>
+                <button class="scenario-option" data-scenario="business">💼 Деловые переговоры</button>
+                <button class="scenario-option" data-scenario="romantic">💕 Романтическое знакомство</button>
+                <button class="scenario-option" data-scenario="conflict">⚔️ Разрешение конфликта</button>
+                <button class="scenario-option" data-scenario="fantasy">⚔️ Фэнтези приключение</button>
+                <button class="scenario-option" data-scenario="detective">🔍 Детективная история</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ending-modal" id="ending-modal">
+        <div class="ending-content">
+            <h2 id="ending-title">🎉 Отличная концовка!</h2>
+            <p id="ending-text">Текст концовки</p>
+            <p class="ending-stats"><strong>Итоговые отношения: <span id="ending-relationship">50%</span></strong></p>
+            <div class="ending-buttons">
+                <button class="btn btn-restart" id="ending-restart-btn">🔄 Сыграть снова</button>
+                <button class="btn btn-scenario" id="ending-scenario-btn">📜 Другой сценарий</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="dialogues.js?v=6"></script>
+    <script src="script.js?v=2"></script>
+</body>
+</html>

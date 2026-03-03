@@ -1,0 +1,818 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.messenger-container {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 1100px;
+    width: 100%;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.messenger-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.header-content h1 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Область чата */
+.chat-area {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 20px;
+    min-height: 500px;
+}
+
+/* Панель NPC */
+.npc-panel {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    height: fit-content;
+}
+
+.npc-avatar-large {
+    width: 140px;
+    height: 180px;
+    margin: 0 auto 15px;
+}
+
+.npc-avatar-large svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.3));
+}
+
+.npc-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.npc-mood {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.relationship-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.relationship-display span {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.mini-meter {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.mini-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #48dbfb 100%);
+    transition: width 0.5s ease;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+}
+
+#relationship-value {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Окно чата */
+.chat-window {
+    background: rgba(20, 20, 35, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.5);
+    border-radius: 4px;
+}
+
+/* Сообщения */
+.message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 15px;
+    animation: messageSlide 0.3s ease;
+    line-height: 1.5;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.npc {
+    align-self: flex-start;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    color: #e0e0e0;
+    border-bottom-left-radius: 5px;
+}
+
+.message.player {
+    align-self: flex-end;
+    background: linear-gradient(135deg, rgba(72, 219, 251, 0.3) 0%, rgba(41, 128, 185, 0.3) 100%);
+    border: 1px solid rgba(72, 219, 251, 0.2);
+    color: #fff;
+    border-bottom-right-radius: 5px;
+}
+
+.message-sender {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.message-text {
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Область ввода */
+.chat-input-area {
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.choices-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.choice-btn {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    font-family: inherit;
+}
+
+.choice-btn:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.35) 0%, rgba(118, 75, 162, 0.35) 100%);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateX(5px);
+    color: #fff;
+}
+
+.choice-btn:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+/* Подвал чата */
+.chat-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scene-indicator {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.scene-indicator strong {
+    color: #667eea;
+}
+
+/* Кнопки */
+.btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: 600;
+    font-family: inherit;
+}
+
+.btn-restart {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%);
+    color: #fff;
+    margin-left: 10px;
+}
+
+.btn-restart:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-scenario {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%);
+    color: #fff;
+    margin-left: 8px;
+}
+
+.btn-scenario:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Селектор сценариев */
+.scenario-selector {
+    display: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.scenario-selector.active {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.scenario-selector h3 {
+    color: #fff;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.scenario-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.scenario-option {
+    flex: 1;
+    min-width: 150px;
+    max-width: 250px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    border: 1px solid rgba(102, 126, 234, 0.25);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.scenario-option:hover {
+    border-color: rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+    color: #fff;
+}
+
+/* Модальное окно */
+.ending-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ending-modal.active {
+    display: flex;
+}
+
+.ending-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(102, 126, 234, 0.5);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 450px;
+    text-align: center;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.ending-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #667eea;
+}
+
+.ending-content p {
+    font-size: 1rem;
+    color: #d0d0d0;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.ending-stats {
+    font-size: 1.1rem !important;
+    color: #feca57 !important;
+    margin-bottom: 20px !important;
+}
+
+.ending-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .messenger-container {
+        padding: 15px;
+    }
+
+    .chat-area {
+        grid-template-columns: 180px 1fr;
+        gap: 15px;
+    }
+
+    .npc-avatar-large {
+        width: 100px;
+        height: 130px;
+    }
+
+    .npc-name {
+        font-size: 1rem;
+    }
+
+    .npc-mood {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        align-items: flex-start;
+    }
+
+    .messenger-container {
+        padding: 12px;
+        border-radius: 15px;
+    }
+
+    .header-content h1 {
+        font-size: 1.4rem;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .chat-area {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        min-height: auto;
+    }
+
+    .npc-panel {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-align: left;
+        padding: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .npc-avatar-large {
+        width: 70px;
+        height: 90px;
+        margin: 0;
+    }
+
+    .npc-info {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .npc-name {
+        font-size: 1.1rem;
+    }
+
+    .npc-mood {
+        font-size: 0.85rem;
+    }
+
+    .relationship-display {
+        border-top: none;
+        padding-top: 0;
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .mini-meter {
+        width: 80px;
+        height: 10px;
+    }
+
+    .messenger-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding-bottom: 12px;
+    }
+
+    .chat-messages {
+        padding: 15px;
+        gap: 10px;
+        max-height: 350px;
+    }
+
+    .message {
+        max-width: 85%;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .message-sender {
+        font-size: 0.7rem;
+    }
+
+    .message-text {
+        font-size: 0.9rem;
+    }
+
+    .choice-btn {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+
+    .chat-input-area {
+        padding: 12px 15px;
+    }
+
+    .chat-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 10px 15px;
+    }
+
+    .btn {
+        width: 100%;
+        margin: 5px 0 0 0;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .scenario-options {
+        gap: 6px;
+    }
+
+    .scenario-option {
+        min-width: 100%;
+        max-width: none;
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+
+    .ending-content {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .ending-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .ending-content p {
+        font-size: 0.9rem;
+    }
+
+    .ending-buttons {
+        flex-direction: column;
+    }
+
+    .ending-buttons .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+
+    .messenger-container {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .header-content h1 {
+        font-size: 1.2rem;
+    }
+
+    .subtitle {
+        font-size: 0.75rem;
+    }
+
+    .npc-panel {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .npc-avatar-large {
+        width: 55px;
+        height: 70px;
+    }
+
+    .npc-info {
+        min-width: 100px;
+    }
+
+    .npc-name {
+        font-size: 0.95rem;
+    }
+
+    .npc-mood {
+        font-size: 0.75rem;
+    }
+
+    .relationship-display span {
+        font-size: 0.75rem;
+    }
+
+    .mini-meter {
+        width: 60px;
+        height: 8px;
+    }
+
+    #relationship-value {
+        font-size: 0.8rem;
+    }
+
+    .chat-messages {
+        padding: 10px;
+        gap: 8px;
+        max-height: 280px;
+    }
+
+    .message {
+        max-width: 90%;
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+
+    .message-sender {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+    }
+
+    .message-text {
+        font-size: 0.85rem;
+        line-height: 1.35;
+    }
+
+    .choice-btn {
+        padding: 9px 11px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+    }
+
+    .chat-input-area {
+        padding: 10px 12px;
+    }
+
+    .chat-footer {
+        padding: 8px 12px;
+    }
+
+    .btn {
+        padding: 9px 14px;
+        font-size: 0.85rem;
+    }
+
+    .scenario-selector {
+        padding: 12px;
+    }
+
+    .scenario-selector h3 {
+        font-size: 0.9rem;
+    }
+
+    .scenario-option {
+        padding: 9px 11px;
+        font-size: 0.8rem;
+    }
+
+    .ending-content {
+        padding: 15px;
+    }
+
+    .ending-content h2 {
+        font-size: 1.1rem;
+    }
+
+    .ending-content p {
+        font-size: 0.85rem;
+    }
+
+    .ending-stats {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 360px) {
+    .header-content h1 {
+        font-size: 1.1rem;
+    }
+
+    .subtitle {
+        font-size: 0.7rem;
+    }
+
+    .npc-avatar-large {
+        width: 45px;
+        height: 60px;
+    }
+
+    .npc-name {
+        font-size: 0.85rem;
+    }
+
+    .npc-mood {
+        font-size: 0.7rem;
+    }
+
+    .message {
+        font-size: 0.8rem;
+        padding: 7px 9px;
+    }
+
+    .choice-btn {
+        font-size: 0.75rem;
+        padding: 8px 10px;
+    }
+}
+
+/* Портретная ориентация на мобильных */
+@media (max-height: 600px) and (orientation: portrait) {
+    .chat-messages {
+        max-height: 200px;
+    }
+
+    .npc-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .npc-avatar-large {
+        width: 50px;
+        height: 65px;
+    }
+}
+
+/* Альбомная ориентация на планшетах */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+    .chat-messages {
+        max-height: 350px;
+    }
+
+    .messenger-container {
+        max-width: 900px;
+    }
+}
+
+/* Печать */
+@media print {
+    body {
+        background: white;
+    }
+
+    .messenger-container {
+        box-shadow: none;
+        max-width: 100%;
+    }
+
+    .btn,
+    .scenario-selector,
+    .chat-input-area {
+        display: none;
+    }
+}
