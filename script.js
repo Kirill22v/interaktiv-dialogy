@@ -1,29 +1,37 @@
 // Состояние игры
 let gameState = {
-    currentScenario: 'friendly',
+    currentScenario: 'duration',
     currentScene: 1,
-    relationship: 50,
+    score: 0,
     isWaiting: false
 };
 
-// DOM элементы
-const chatMessages = document.getElementById('chat-messages');
-const choicesContainer = document.getElementById('choices-container');
-const npcName = document.getElementById('npc-name');
-const npcMood = document.getElementById('npc-mood');
-const relationshipMeter = document.getElementById('relationship-meter');
-const relationshipValue = document.getElementById('relationship-value');
-const restartBtn = document.getElementById('restart-btn');
-const scenarioBtn = document.getElementById('scenario-btn');
-const scenarioSelector = document.getElementById('scenario-selector');
-const scenarioOptions = document.querySelectorAll('.scenario-option');
-const endingModal = document.getElementById('ending-modal');
-const endingTitle = document.getElementById('ending-title');
-const endingText = document.getElementById('ending-text');
-const endingRelationship = document.getElementById('ending-relationship');
-const endingRestartBtn = document.getElementById('ending-restart-btn');
-const endingScenarioBtn = document.getElementById('ending-scenario-btn');
-const npcAvatarContainer = document.getElementById('npc-avatar-container');
+// DOM элементы (будут инициализированы после загрузки DOM)
+let chatMessages, choicesContainer, npcName, npcMood, relationshipMeter, relationshipValue;
+let restartBtn, scenarioBtn, scenarioSelector, scenarioOptions;
+let endingModal, endingTitle, endingText, endingRelationship;
+let endingRestartBtn, endingScenarioBtn, npcAvatarContainer;
+
+// Инициализация DOM элементов
+function initDOMElements() {
+    chatMessages = document.getElementById('chat-messages');
+    choicesContainer = document.getElementById('choices-container');
+    npcName = document.getElementById('npc-name');
+    npcMood = document.getElementById('npc-mood');
+    relationshipMeter = document.getElementById('relationship-meter');
+    relationshipValue = document.getElementById('relationship-value');
+    restartBtn = document.getElementById('restart-btn');
+    scenarioBtn = document.getElementById('scenario-btn');
+    scenarioSelector = document.getElementById('scenario-selector');
+    scenarioOptions = document.querySelectorAll('.scenario-option');
+    endingModal = document.getElementById('ending-modal');
+    endingTitle = document.getElementById('ending-title');
+    endingText = document.getElementById('ending-text');
+    endingRelationship = document.getElementById('ending-relationship');
+    endingRestartBtn = document.getElementById('ending-restart-btn');
+    endingScenarioBtn = document.getElementById('ending-scenario-btn');
+    npcAvatarContainer = document.getElementById('npc-avatar-container');
+}
 
 // Добавление сообщения в чат
 function addMessage(text, sender, senderName) {
@@ -60,10 +68,10 @@ function renderCharacter(container, avatarKey) {
 }
 
 // Инициализация игры
-function initGame(scenarioKey = 'friendly') {
+function initGame(scenarioKey = 'duration') {
     gameState.currentScenario = scenarioKey;
     gameState.currentScene = scenarios[scenarioKey].startScene;
-    gameState.relationship = 50;
+    gameState.score = 0;
     gameState.isWaiting = false;
 
     const scenario = scenarios[scenarioKey];
@@ -82,16 +90,16 @@ function initGame(scenarioKey = 'friendly') {
 
 // Обновление настроения NPC
 function updateMood() {
-    const rel = gameState.relationship;
+    const score = gameState.score;
     let mood, emoji;
 
-    if (rel >= 70) {
+    if (score >= 35) {
         mood = "Отлично";
         emoji = "😊";
-    } else if (rel >= 50) {
+    } else if (score >= 15) {
         mood = "Хорошо";
         emoji = "🙂";
-    } else if (rel >= 30) {
+    } else if (score >= 0) {
         mood = "Нейтрально";
         emoji = "😐";
     } else {
@@ -102,11 +110,14 @@ function updateMood() {
     npcMood.textContent = `${emoji} ${mood}`;
 }
 
-// Обновление индикатора отношений
+// Обновление индикатора (теперь показывает прогресс баллов)
 function updateRelationshipMeter() {
-    const clampedRel = Math.max(0, Math.min(100, gameState.relationship));
-    relationshipMeter.style.width = `${clampedRel}%`;
-    relationshipValue.textContent = `${clampedRel}%`;
+    // Максимальный возможный счёт примерно 60-70 баллов
+    const maxScore = 60;
+    const clampedScore = Math.max(0, Math.min(maxScore, gameState.score + 20));
+    const percentage = (clampedScore / maxScore) * 100;
+    relationshipMeter.style.width = `${percentage}%`;
+    relationshipValue.textContent = `${gameState.score} баллов`;
 }
 
 // Рендер сцены
@@ -149,9 +160,8 @@ function makeChoice(choice) {
     // Добавляем сообщение игрока
     addMessage(choice.text, 'player', 'Вы');
 
-    // Обновляем отношения
-    gameState.relationship += choice.relationshipChange || 0;
-    gameState.relationship = Math.max(0, Math.min(100, gameState.relationship));
+    // Обновляем счёт
+    gameState.score += choice.relationshipChange || 0;
     updateRelationshipMeter();
 
     // Переход к следующей сцене
@@ -169,26 +179,32 @@ function showEnding(scene) {
     choicesContainer.innerHTML = '';
     gameState.isWaiting = true;
 
-    let title, color;
-    switch(scene.endingType) {
-        case 'good':
-            title = "🎉 Отличная концовка!";
-            color = "#48dbfb";
-            break;
-        case 'neutral':
-            title = "😐 Нейтральная концовка";
-            color = "#feca57";
-            break;
-        case 'bad':
-            title = "😞 Неудачная концовка";
-            color = "#ff6b6b";
-            break;
+    let title, color, rating;
+    const score = gameState.score;
+
+    // Определение рейтинга по баллам
+    if (score >= 35) {
+        title = "🎉 Профессионал!";
+        color = "#48dbfb";
+        rating = "Конфликт исчерпан, клиент лоялен!";
+    } else if (score >= 15) {
+        title = "😊 Опытный специалист";
+        color = "#feca57";
+        rating = "Проблема устранена частично, клиент нейтрален.";
+    } else if (score >= 0) {
+        title = "😐 Начинающий мастер";
+        color = "#ff9f43";
+        rating = "Конфликт не решён, клиент недоволен.";
+    } else {
+        title = "😞 Критическая ошибка";
+        color = "#ff6b6b";
+        rating = "Клиент крайне недоволен, готов жаловаться!";
     }
 
     endingTitle.textContent = title;
     endingTitle.style.color = color;
-    endingText.textContent = scene.endingText;
-    endingRelationship.textContent = `${gameState.relationship}%`;
+    endingText.innerHTML = `<strong>${scene.endingText}</strong><br><br><em>${rating}</em>`;
+    endingRelationship.textContent = `${gameState.score} баллов`;
 
     setTimeout(() => {
         endingModal.classList.add('active');
@@ -201,28 +217,33 @@ function toggleScenarioSelector() {
 }
 
 // Обработчики кнопок
-restartBtn.addEventListener('click', () => {
-    initGame(gameState.currentScenario);
-});
-
-scenarioBtn.addEventListener('click', toggleScenarioSelector);
-
-scenarioOptions.forEach(option => {
-    option.addEventListener('click', () => {
-        const scenarioKey = option.dataset.scenario;
-        initGame(scenarioKey);
+function initEventListeners() {
+    restartBtn.addEventListener('click', () => {
+        initGame(gameState.currentScenario);
     });
-});
 
-endingRestartBtn.addEventListener('click', () => {
-    initGame(gameState.currentScenario);
-});
+    scenarioBtn.addEventListener('click', toggleScenarioSelector);
 
-endingScenarioBtn.addEventListener('click', () => {
-    endingModal.classList.remove('active');
-    toggleScenarioSelector();
-});
+    scenarioOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const scenarioKey = option.dataset.scenario;
+            initGame(scenarioKey);
+        });
+    });
 
+    endingRestartBtn.addEventListener('click', () => {
+        initGame(gameState.currentScenario);
+    });
+
+    endingScenarioBtn.addEventListener('click', () => {
+        endingModal.classList.remove('active');
+        toggleScenarioSelector();
+    });
+}
+
+// Инициализация при загрузке
 window.addEventListener('load', () => {
+    initDOMElements();
+    initEventListeners();
     initGame();
 });
