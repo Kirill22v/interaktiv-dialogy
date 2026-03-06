@@ -218,6 +218,27 @@ body {
     line-height: 1.4;
 }
 
+/* Предыстория */
+.message.backstory {
+    align-self: center;
+    background: linear-gradient(135deg, rgba(255, 202, 87, 0.2) 0%, rgba(255, 167, 38, 0.2) 100%);
+    border: 1px solid rgba(255, 202, 87, 0.3);
+    color: #ffd54f;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    max-width: 90%;
+}
+
+.message.backstory .message-sender {
+    color: #ffb74d;
+    font-weight: bold;
+}
+
+.message.backstory .message-text {
+    font-style: italic;
+    color: #ffe082;
+}
+
 /* Область ввода */
 .chat-input-area {
     padding: 15px 20px;
@@ -553,6 +574,8 @@ body {
         padding: 15px;
         gap: 10px;
         max-height: 350px;
+        display: flex;
+        flex-direction: column;
     }
 
     .message {
@@ -682,6 +705,8 @@ body {
         padding: 10px;
         gap: 8px;
         max-height: 280px;
+        display: flex;
+        flex-direction: column;
     }
 
     .message {
@@ -788,6 +813,8 @@ body {
 @media (max-height: 600px) and (orientation: portrait) {
     .chat-messages {
         max-height: 200px;
+        display: flex;
+        flex-direction: column;
     }
 
     .npc-panel {
@@ -805,6 +832,8 @@ body {
 @media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
     .chat-messages {
         max-height: 350px;
+        display: flex;
+        flex-direction: column;
     }
 
     .messenger-container {
