@@ -10,7 +10,7 @@ let gameState = {
 let chatMessages, choicesContainer, npcName, npcMood, relationshipMeter, relationshipValue;
 let restartBtn, scenarioBtn, scenarioSelector, scenarioOptions;
 let endingModal, endingTitle, endingText, endingRelationship;
-let endingRestartBtn, endingScenarioBtn, npcAvatarContainer;
+let endingRestartBtn, endingScenarioBtn, npcAvatarContainer, backstoryContainer;
 
 // Инициализация DOM элементов
 function initDOMElements() {
@@ -31,6 +31,11 @@ function initDOMElements() {
     endingRestartBtn = document.getElementById('ending-restart-btn');
     endingScenarioBtn = document.getElementById('ending-scenario-btn');
     npcAvatarContainer = document.getElementById('npc-avatar-container');
+    
+    // Создаём контейнер для предыстории
+    backstoryContainer = document.createElement('div');
+    backstoryContainer.className = 'backstory-message';
+    backstoryContainer.id = 'backstory-message';
 }
 
 // Добавление сообщения в чат
@@ -83,9 +88,34 @@ function initGame(scenarioKey = 'duration') {
     scenarioSelector.classList.remove('active');
 
     clearChat();
+    
+    // Добавляем предысторию
+    showBackstory(scenario.backstory);
+    
     updateMood();
     updateRelationshipMeter();
-    renderScene();
+}
+
+// Показ предыстории
+function showBackstory(backstory) {
+    if (!backstory) {
+        renderScene();
+        return;
+    }
+    
+    const backstoryDiv = document.createElement('div');
+    backstoryDiv.className = 'message backstory';
+    backstoryDiv.innerHTML = `
+        <div class="message-sender">📖 Предыстория</div>
+        <div class="message-text">${backstory}</div>
+    `;
+    chatMessages.appendChild(backstoryDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Показываем сцену через небольшую задержку
+    setTimeout(() => {
+        renderScene();
+    }, 1500);
 }
 
 // Обновление настроения NPC
