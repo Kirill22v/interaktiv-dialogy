@@ -63,12 +63,9 @@
         <div class="scenario-selector" id="scenario-selector">
             <h3>Выберите сценарий:</h3>
             <div class="scenario-options">
-                <button class="scenario-option" data-scenario="friendly">🤝 Дружеская беседа</button>
-                <button class="scenario-option" data-scenario="business">💼 Деловые переговоры</button>
-                <button class="scenario-option" data-scenario="romantic">💕 Романтическое знакомство</button>
-                <button class="scenario-option" data-scenario="conflict">⚔️ Разрешение конфликта</button>
-                <button class="scenario-option" data-scenario="fantasy">⚔️ Фэнтези приключение</button>
-                <button class="scenario-option" data-scenario="detective">🔍 Детективная история</button>
+                <button class="scenario-option" data-scenario="duration">⏱️ Недовольство длительностью процедуры</button>
+                <button class="scenario-option" data-scenario="haircut">✂️ Недовольство результатом стрижки</button>
+                <button class="scenario-option" data-scenario="manicure">💅 Отслойка покрытия после маникюра</button>
             </div>
         </div>
     </div>
@@ -138,6 +135,7 @@
         ];
 
         let testAnswers = {};
+        let currentQuestionIndex = 0;
 
         const testSection = document.getElementById('test-section');
         const testQuestionsContainer = document.getElementById('test-questions');
@@ -147,68 +145,83 @@
         const resultContent = document.getElementById('result-content');
         const restartTestBtn = document.getElementById('restart-test-btn');
 
-        // Инициализация теста
-        function initTest() {
+        // Отрисовка текущего вопроса
+        function renderQuestion(index) {
             testQuestionsContainer.innerHTML = '';
-            testAnswers = {};
+            
+            if (index >= testQuestions.length) {
+                // Все вопросы отвечены, показываем кнопку результата
+                submitTestBtn.classList.add('active');
+                return;
+            }
 
-            testQuestions.forEach((q, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'test-question';
-                
-                const questionText = document.createElement('p');
-                questionText.className = 'question-text';
-                questionText.textContent = `${index + 1}. ${q.text}`;
-                
-                const answersDiv = document.createElement('div');
-                answersDiv.className = 'question-answers';
-                
-                answerOptions.forEach(opt => {
-                    const label = document.createElement('label');
-                    label.className = 'answer-option';
-                    
-                    const radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = `question-${q.id}`;
-                    radio.value = opt.value;
-                    
-                    radio.addEventListener('change', () => {
-                        testAnswers[q.id] = opt.value;
-                    });
-                    
-                    const span = document.createElement('span');
-                    span.textContent = opt.text;
-                    
-                    label.appendChild(radio);
-                    label.appendChild(span);
-                    answersDiv.appendChild(label);
+            const q = testQuestions[index];
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'test-question';
+            questionDiv.style.animation = 'slideUp 0.3s ease';
+
+            const questionText = document.createElement('p');
+            questionText.className = 'question-text';
+            questionText.textContent = `${index + 1}. ${q.text}`;
+
+            const answersDiv = document.createElement('div');
+            answersDiv.className = 'question-answers';
+
+            answerOptions.forEach(opt => {
+                const label = document.createElement('label');
+                label.className = 'answer-option';
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `question-${q.id}`;
+                radio.value = opt.value;
+
+                radio.addEventListener('change', () => {
+                    testAnswers[q.id] = opt.value;
+                    // Переход к следующему вопросу через небольшую задержку
+                    setTimeout(() => {
+                        currentQuestionIndex++;
+                        renderQuestion(currentQuestionIndex);
+                    }, 300);
                 });
-                
-                questionDiv.appendChild(questionText);
-                questionDiv.appendChild(answersDiv);
-                testQuestionsContainer.appendChild(questionDiv);
+
+                const span = document.createElement('span');
+                span.textContent = opt.text;
+
+                label.appendChild(radio);
+                label.appendChild(span);
+                answersDiv.appendChild(label);
             });
 
+            // Прогресс
+            const progressDiv = document.createElement('div');
+            progressDiv.className = 'test-progress';
+            progressDiv.textContent = `Вопрос ${index + 1} из ${testQuestions.length}`;
+
+            questionDiv.appendChild(progressDiv);
+            questionDiv.appendChild(questionText);
+            questionDiv.appendChild(answersDiv);
+            testQuestionsContainer.appendChild(questionDiv);
+        }
+
+        // Инициализация теста
+        function initTest() {
+            testAnswers = {};
+            currentQuestionIndex = 0;
+            renderQuestion(0);
             testResult.classList.remove('active');
         }
 
         // Показать тест
         showTestBtn.addEventListener('click', () => {
             testQuestionsContainer.classList.add('active');
-            submitTestBtn.classList.add('active');
             showTestBtn.classList.add('hidden');
+            submitTestBtn.classList.remove('active');
             initTest();
         });
 
         // Отправить тест
         submitTestBtn.addEventListener('click', () => {
-            const answeredCount = Object.keys(testAnswers).length;
-            
-            if (answeredCount < testQuestions.length) {
-                alert(`Вы ответили на ${answeredCount} из ${testQuestions.length} вопросов. Пожалуйста, ответьте на все вопросы!`);
-                return;
-            }
-            
             showTestResult();
         });
 
@@ -221,9 +234,9 @@
 
             const maxScore = testQuestions.length * 3;
             const percentage = (totalScore / maxScore) * 100;
-            
+
             let resultText, resultColor, recommendation;
-            
+
             if (percentage <= 40) {
                 resultText = "Низкий уровень стресса";
                 resultColor = "#48dbfb";
@@ -264,12 +277,12 @@
         restartTestBtn.addEventListener('click', () => {
             testResult.classList.remove('active');
             testQuestionsContainer.classList.add('active');
-            submitTestBtn.classList.add('active');
+            submitTestBtn.classList.remove('active');
+            showTestBtn.classList.remove('hidden');
             initTest();
         });
 
-        // Инициализация при загрузке
-        initTest();
+        // НЕ инициализируем тест при загрузке - он должен быть скрыт
     </script>
 </body>
 </html>
