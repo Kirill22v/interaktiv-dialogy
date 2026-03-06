@@ -7,6 +7,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="apple-touch-icon" href="./favicon.svg">
     <title>Интерактивные Диалоги</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -70,6 +73,27 @@
         </div>
     </div>
 
+    <!-- Тест -->
+    <div class="test-section" id="test-section">
+        <div class="test-container">
+            <h2>📋 Тест</h2>
+            <p class="test-description">Ответьте на вопросы, чтобы лучше понять себя</p>
+
+            <div class="test-questions" id="test-questions">
+                <!-- Вопросы будут добавлены через JS -->
+            </div>
+
+            <button class="btn btn-test" id="show-test-btn">📋 Пройти тест</button>
+            <button class="btn btn-submit" id="submit-test-btn">✅ Показать результат</button>
+        </div>
+
+        <div class="test-result" id="test-result">
+            <h3>📊 Результаты теста</h3>
+            <div id="result-content"></div>
+            <button class="btn btn-restart" id="restart-test-btn">🔄 Пройти заново</button>
+        </div>
+    </div>
+
     <div class="ending-modal" id="ending-modal">
         <div class="ending-content">
             <h2 id="ending-title">🎉 Отличная концовка!</h2>
@@ -84,5 +108,168 @@
 
     <script src="dialogues.js?v=6"></script>
     <script src="script.js?v=2"></script>
+    <script>
+        // Данные теста
+        const testQuestions = [
+            { id: 1, text: "Я думаю, что меня недооценивают в коллективе" },
+            { id: 2, text: "Я стараюсь работать, учиться, даже если бываю не совсем здоров" },
+            { id: 3, text: "Я переживаю за качество своей работы" },
+            { id: 4, text: "Я бываю, настроен агрессивно" },
+            { id: 5, text: "Я не терплю критики в свой адрес" },
+            { id: 6, text: "Я бываю раздражителен" },
+            { id: 7, text: "Я стараюсь быть лидером там, где это возможно" },
+            { id: 8, text: "Меня считают человеком настойчивым и напористым" },
+            { id: 9, text: "Я страдаю бессонницей" },
+            { id: 10, text: "Своим недругам я могу дать отпор" },
+            { id: 11, text: "Я эмоционально и болезненно переживаю неприятности" },
+            { id: 12, text: "У меня не хватает времени на отдых" },
+            { id: 13, text: "У меня возникают конфликтные ситуации" },
+            { id: 14, text: "Мне недостает власти, чтобы реализовать себя" },
+            { id: 15, text: "У меня не хватает времени, чтобы заняться любимым делом" },
+            { id: 16, text: "Я все делаю быстро" },
+            { id: 17, text: "Я испытываю страх, что не поступлю в институт" },
+            { id: 18, text: "Я действую сгоряча, а затем переживаю за свои дела и поступки" }
+        ];
+
+        const answerOptions = [
+            { value: 1, text: "редко" },
+            { value: 2, text: "иногда" },
+            { value: 3, text: "часто" }
+        ];
+
+        let testAnswers = {};
+
+        const testSection = document.getElementById('test-section');
+        const testQuestionsContainer = document.getElementById('test-questions');
+        const showTestBtn = document.getElementById('show-test-btn');
+        const submitTestBtn = document.getElementById('submit-test-btn');
+        const testResult = document.getElementById('test-result');
+        const resultContent = document.getElementById('result-content');
+        const restartTestBtn = document.getElementById('restart-test-btn');
+
+        // Инициализация теста
+        function initTest() {
+            testQuestionsContainer.innerHTML = '';
+            testAnswers = {};
+
+            testQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'test-question';
+                
+                const questionText = document.createElement('p');
+                questionText.className = 'question-text';
+                questionText.textContent = `${index + 1}. ${q.text}`;
+                
+                const answersDiv = document.createElement('div');
+                answersDiv.className = 'question-answers';
+                
+                answerOptions.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'answer-option';
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `question-${q.id}`;
+                    radio.value = opt.value;
+                    
+                    radio.addEventListener('change', () => {
+                        testAnswers[q.id] = opt.value;
+                    });
+                    
+                    const span = document.createElement('span');
+                    span.textContent = opt.text;
+                    
+                    label.appendChild(radio);
+                    label.appendChild(span);
+                    answersDiv.appendChild(label);
+                });
+                
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(answersDiv);
+                testQuestionsContainer.appendChild(questionDiv);
+            });
+
+            testResult.classList.remove('active');
+        }
+
+        // Показать тест
+        showTestBtn.addEventListener('click', () => {
+            testQuestionsContainer.classList.add('active');
+            submitTestBtn.classList.add('active');
+            showTestBtn.classList.add('hidden');
+            initTest();
+        });
+
+        // Отправить тест
+        submitTestBtn.addEventListener('click', () => {
+            const answeredCount = Object.keys(testAnswers).length;
+            
+            if (answeredCount < testQuestions.length) {
+                alert(`Вы ответили на ${answeredCount} из ${testQuestions.length} вопросов. Пожалуйста, ответьте на все вопросы!`);
+                return;
+            }
+            
+            showTestResult();
+        });
+
+        // Показать результат
+        function showTestResult() {
+            let totalScore = 0;
+            Object.values(testAnswers).forEach(value => {
+                totalScore += value;
+            });
+
+            const maxScore = testQuestions.length * 3;
+            const percentage = (totalScore / maxScore) * 100;
+            
+            let resultText, resultColor, recommendation;
+            
+            if (percentage <= 40) {
+                resultText = "Низкий уровень стресса";
+                resultColor = "#48dbfb";
+                recommendation = "У вас отличное эмоциональное состояние! Продолжайте в том же духе.";
+            } else if (percentage <= 60) {
+                resultText = "Средний уровень стресса";
+                resultColor = "#feca57";
+                recommendation = "Умеренный уровень напряжения. Рекомендуется больше отдыхать и находить время для себя.";
+            } else if (percentage <= 75) {
+                resultText = "Повышенный уровень стресса";
+                resultColor = "#ff9f43";
+                recommendation = "Вам стоит обратить внимание на своё состояние. Рассмотрите возможность отдыха, медитации или консультации со специалистом.";
+            } else {
+                resultText = "Высокий уровень стресса";
+                resultColor = "#ff6b6b";
+                recommendation = "Рекомендуется обратиться к специалисту для получения профессиональной поддержки.";
+            }
+
+            resultContent.innerHTML = `
+                <div class="result-score">
+                    <p><strong>Суммарный балл:</strong> ${totalScore} из ${maxScore}</p>
+                    <p><strong>Процент:</strong> ${Math.round(percentage)}%</p>
+                </div>
+                <div class="result-diagnosis" style="color: ${resultColor}">
+                    <h4>${resultText}</h4>
+                </div>
+                <div class="result-recommendation">
+                    <p>${recommendation}</p>
+                </div>
+            `;
+
+            testResult.classList.add('active');
+            testQuestionsContainer.classList.remove('active');
+            submitTestBtn.classList.remove('active');
+        }
+
+        // Пройти заново
+        restartTestBtn.addEventListener('click', () => {
+            testResult.classList.remove('active');
+            testQuestionsContainer.classList.add('active');
+            submitTestBtn.classList.add('active');
+            initTest();
+        });
+
+        // Инициализация при загрузке
+        initTest();
+    </script>
 </body>
 </html>
