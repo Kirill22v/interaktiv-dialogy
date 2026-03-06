@@ -21,6 +21,8 @@ body {
     padding: 20px;
     margin: 0 auto;
     animation: fadeIn 0.5s ease-in;
+    position: relative;
+    z-index: 1;
 }
 
 @keyframes fadeIn {
@@ -147,10 +149,10 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
+    min-height: 300px;
     max-height: 400px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -174,6 +176,7 @@ body {
     border-radius: 15px;
     animation: messageSlide 0.3s ease;
     line-height: 1.5;
+    margin-bottom: 12px;
 }
 
 @keyframes messageSlide {
@@ -325,6 +328,17 @@ body {
     from {
         opacity: 0;
         transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -826,6 +840,9 @@ body {
     width: 100%;
     padding: 20px;
     margin: 30px auto 0;
+    display: block;
+    position: relative;
+    z-index: 1;
 }
 
 .test-container {
@@ -852,10 +869,29 @@ body {
     display: none;
     text-align: left;
     margin: 20px 0;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .test-questions.active {
     display: block;
+}
+
+/* Скрываем тест по умолчанию, показываем только после нажатия кнопки */
+.test-container .btn-test {
+    display: inline-block;
+}
+
+.test-container .btn-submit {
+    display: none;
+}
+
+.test-container .btn-submit.active {
+    display: inline-block;
+}
+
+.test-container .btn-test.hidden {
+    display: none;
 }
 
 .test-question {
@@ -877,6 +913,13 @@ body {
     font-size: 0.95rem;
     margin-bottom: 12px;
     font-weight: 500;
+}
+
+.test-progress {
+    color: #667eea;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .question-answers {
@@ -972,17 +1015,6 @@ body {
 .test-result.active {
     display: block;
     animation: slideUp 0.5s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .test-result h3 {
