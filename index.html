@@ -7,13 +7,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="Диалоговый тренажёр для отработки навыков общения с клиентами">
-    <meta name="keywords" content="тренажёр, диалоги, клиенты, сервис, обучение">
+    <meta name="description" content="Симулятор коммуникативных навыков для индустрии красоты">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="favicon.svg">
-    <title>Диалоговый Тренажёр — Отработка навыков общения</title>
+    <title>Симулятор — Коммуникативные навыки</title>
     <style>
-        /* ===== CSS Переменные для адаптивности ===== */
         :root {
             --bg-primary: #1a1a2e;
             --bg-secondary: #16213e;
@@ -22,10 +20,9 @@
             --accent-secondary: #764ba2;
             --text-primary: #ffffff;
             --text-secondary: #8592b9;
-            --text-muted: #667;
+            --text-gold: #feca57;
         }
 
-        /* ===== Базовые стили ===== */
         * {
             margin: 0;
             padding: 0;
@@ -43,15 +40,12 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             padding: 20px;
             overflow-y: auto;
             line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ===== Анимированные частицы ===== */
         .particles {
             position: fixed;
             top: 0;
@@ -70,7 +64,6 @@
             background: rgba(102, 126, 234, 0.5);
             border-radius: 50%;
             animation: float 15s infinite;
-            will-change: transform, opacity;
         }
 
         @keyframes float {
@@ -78,33 +71,26 @@
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
             100% {
                 transform: translateY(-100vh) rotate(720deg);
                 opacity: 0;
             }
         }
 
-        /* ===== Контейнер приветствия ===== */
-        .welcome-container {
+        .container {
             background: linear-gradient(180deg, rgba(31, 40, 51, 0.95) 0%, rgba(11, 15, 25, 0.95) 100%);
             border-radius: 25px;
             box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5),
                         0 0 60px rgba(102, 126, 234, 0.2);
             border: 1px solid rgba(102, 126, 234, 0.3);
-            max-width: 700px;
+            max-width: 900px;
             width: 100%;
-            padding: 50px 40px;
-            text-align: center;
+            padding: clamp(25px, 5vw, 40px);
             z-index: 1;
             animation: slideUp 0.8s ease-out;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
         @keyframes slideUp {
@@ -118,185 +104,125 @@
             }
         }
 
-        /* ===== Логотип ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
         .logo {
-            font-size: clamp(3rem, 8vw, 5rem);
-            margin-bottom: 20px;
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            margin-bottom: 15px;
             animation: pulse 2s ease-in-out infinite;
-            display: inline-block;
         }
 
         @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
-        /* ===== Заголовки ===== */
         h1 {
             color: var(--text-primary);
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-bottom: 15px;
-            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
-            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            margin-bottom: 10px;
             font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            margin-bottom: 35px;
-            line-height: 1.6;
+        .specialty {
+            color: var(--text-gold);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 600;
+            margin-top: 8px;
         }
 
-        /* ===== Персонажи ===== */
-        .characters-showcase {
-            display: flex;
-            justify-content: center;
-            gap: clamp(15px, 4vw, 30px);
-            margin: clamp(20px, 5vw, 30px) 0;
-            flex-wrap: wrap;
-        }
-
-        .char-preview {
-            text-align: center;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        .char-preview:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .char-preview:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .char-preview span {
-            font-size: clamp(2rem, 5vw, 3rem);
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .char-preview p {
-            color: var(--text-secondary);
-            font-size: clamp(0.75rem, 2vw, 0.85rem);
-            font-weight: 500;
-        }
-
-        /* ===== Особенности ===== */
-        .features {
+        .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 30vw, 200px), 1fr));
-            gap: clamp(15px, 3vw, 20px);
-            margin: clamp(25px, 6vw, 35px) 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
         }
 
-        .feature {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 15px;
-            padding: clamp(15px, 4vw, 20px);
-            transition: all 0.3s ease;
-            will-change: transform, box-shadow;
-        }
-
-        .feature:hover {
-            background: rgba(102, 126, 234, 0.15);
-            border-color: rgba(102, 126, 234, 0.5);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-        }
-
-        .feature-icon {
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            margin-bottom: clamp(10px, 2vw, 12px);
-        }
-
-        .feature h3 {
-            color: var(--text-primary);
-            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .feature p {
-            color: var(--text-secondary);
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            line-height: 1.5;
-        }
-
-        /* ===== Предпросмотр сценариев ===== */
-        .scenarios-preview {
-            margin: clamp(25px, 6vw, 35px) 0;
-            padding: clamp(20px, 5vw, 25px);
+        .section {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
             border: 1px solid rgba(102, 126, 234, 0.15);
-        }
-
-        .scenarios-preview h3 {
-            color: var(--text-primary);
-            font-size: clamp(1rem, 3vw, 1.2rem);
-            margin-bottom: clamp(15px, 4vw, 20px);
-            font-weight: 600;
-        }
-
-        .scenario-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: clamp(8px, 2vw, 10px);
-            justify-content: center;
-        }
-
-        .scenario-tag {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 20px;
-            padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 16px);
-            color: #e0e0e0;
-            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            border-radius: 15px;
+            padding: 20px;
             transition: all 0.3s ease;
-            white-space: nowrap;
         }
 
-        .scenario-tag:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%);
-            border-color: rgba(102, 126, 234, 0.6);
-            transform: scale(1.05);
+        .section:hover {
+            background: rgba(102, 126, 234, 0.08);
+            border-color: rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
         }
 
-        /* ===== Кнопка старта ===== */
+        .section h2 {
+            color: var(--accent-primary);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        .section p, .section li {
+            color: var(--text-secondary);
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            line-height: 1.7;
+        }
+
+        .section ul {
+            list-style: none;
+            padding-left: 5px;
+        }
+
+        .section li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .section li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-secondary);
+            font-weight: bold;
+        }
+
+        .description-full {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            border-color: rgba(102, 126, 234, 0.25);
+        }
+
         .start-btn {
             background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
             color: var(--text-primary);
             border: none;
             border-radius: 50px;
-            padding: clamp(14px, 4vw, 18px) clamp(30px, 8vw, 60px);
-            font-size: clamp(0.95rem, 3vw, 1.2rem);
+            padding: clamp(14px, 4vw, 18px) clamp(40px, 10vw, 80px);
+            font-size: clamp(1rem, 3vw, 1.2rem);
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: clamp(20px, 5vw, 30px);
+            display: block;
+            margin: 0 auto;
             box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
             text-decoration: none;
-            display: inline-block;
+            text-align: center;
             will-change: transform, box-shadow;
-            max-width: 100%;
         }
 
         .start-btn:hover {
@@ -313,484 +239,81 @@
             outline-offset: 3px;
         }
 
-        .footer-note {
-            margin-top: clamp(20px, 5vw, 30px);
-            color: var(--text-muted);
-            font-size: clamp(0.75rem, 2vw, 0.85rem);
-        }
-
-        /* ===== Медиа-запросы для различных устройств ===== */
-        
-        /* ===== Мобильные устройства (до 360px) ===== */
-        @media (max-width: 360px) {
-            body {
-                padding: 10px;
-            }
-
-            .welcome-container {
-                padding: 20px 15px;
-                border-radius: 15px;
-            }
-
-            .features {
+        /* Медиа-запросы */
+        @media (max-width: 600px) {
+            .content-grid {
                 grid-template-columns: 1fr;
             }
 
-            .feature {
-                padding: 15px;
-            }
-
-            .scenarios-preview {
-                padding: 15px;
-            }
-
-            .scenario-tag {
-                font-size: 0.7rem;
-                padding: 5px 10px;
-            }
-
-            .char-preview span {
-                font-size: 1.8rem;
+            .description-full {
+                grid-column: 1;
             }
         }
 
-        /* ===== Малые мобильные (361px - 480px) ===== */
-        @media (min-width: 361px) and (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-
-            .welcome-container {
-                padding: 25px 18px;
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .start-btn {
-                width: 100%;
-                padding: 14px 30px;
-            }
-
-            .characters-showcase {
-                gap: 15px;
-            }
-        }
-
-        /* ===== Средние мобильные (481px - 600px) ===== */
-        @media (min-width: 481px) and (max-width: 600px) {
-            .welcome-container {
-                padding: 35px 25px;
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .start-btn {
-                padding: 15px 40px;
-            }
-        }
-
-        /* ===== Планшеты портретные (601px - 768px) ===== */
-        @media (min-width: 601px) and (max-width: 768px) {
-            .welcome-container {
-                max-width: 600px;
-                padding: 40px 30px;
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .characters-showcase {
-                gap: 25px;
-            }
-        }
-
-        /* ===== Планшеты альбомные (769px - 1024px) ===== */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .welcome-container {
-                max-width: 700px;
-                padding: 45px 35px;
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            body {
-                padding: 25px;
-            }
-        }
-
-        /* ===== Планшеты альбомная ориентация ===== */
-        @media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
-            .welcome-container {
-                max-width: 800px;
-                padding: 30px 40px;
-            }
-
-            .features {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .characters-showcase {
-                margin: 20px 0;
-            }
-        }
-
-        /* ===== Маленькие планшеты ===== */
-        @media (min-width: 481px) and (max-width: 768px) and (orientation: landscape) {
-            .welcome-container {
-                max-width: 650px;
-            }
-
-            .features {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        /* ===== Портретная ориентация на мобильных ===== */
-        @media (max-height: 600px) and (orientation: portrait) {
-            body {
-                padding: 10px;
-                align-items: flex-start;
-            }
-
-            .welcome-container {
-                padding: 20px 15px;
-            }
-
-            .logo {
-                font-size: 2.5rem;
-                margin-bottom: 10px;
-            }
-
-            .characters-showcase {
-                margin: 15px 0;
-                gap: 15px;
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                margin: 20px 0;
-            }
-
-            .scenarios-preview {
-                margin: 15px 0;
-                padding: 15px;
-            }
-
-            .start-btn {
-                margin-top: 15px;
-                padding: 12px 25px;
-            }
-        }
-
-        /* ===== Очень низкие экраны ===== */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .welcome-container {
-                padding: 15px 20px;
-            }
-
-            .logo {
-                font-size: 2rem;
-                margin-bottom: 8px;
-            }
-
-            h1 {
-                font-size: 1.3rem;
-                margin-bottom: 8px;
-            }
-
-            .subtitle {
-                font-size: 0.8rem;
-                margin-bottom: 15px;
-            }
-
-            .characters-showcase {
-                margin: 10px 0;
-                gap: 10px;
-            }
-
-            .char-preview span {
-                font-size: 1.5rem;
-            }
-
-            .char-preview p {
-                font-size: 0.7rem;
-            }
-
-            .features {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 8px;
-                margin: 15px 0;
-            }
-
-            .feature {
-                padding: 10px;
-            }
-
-            .feature-icon {
-                font-size: 1.5rem;
-                margin-bottom: 5px;
-            }
-
-            .feature h3 {
-                font-size: 0.75rem;
-            }
-
-            .feature p {
-                font-size: 0.65rem;
-            }
-
-            .scenarios-preview {
-                margin: 10px 0;
-                padding: 10px;
-            }
-
-            .scenarios-preview h3 {
-                font-size: 0.8rem;
-                margin-bottom: 10px;
-            }
-
-            .scenario-tag {
-                font-size: 0.65rem;
-                padding: 4px 8px;
-            }
-
-            .start-btn {
-                padding: 10px 20px;
-                font-size: 0.85rem;
-                margin-top: 10px;
-            }
-        }
-
-        /* ===== Большие экраны (1025px - 1440px) ===== */
-        @media (min-width: 1025px) and (max-width: 1440px) {
-            .welcome-container {
-                max-width: 750px;
-            }
-
-            body {
-                padding: 30px;
-            }
-        }
-
-        /* ===== Очень большие экраны ===== */
-        @media (min-width: 1441px) {
-            .welcome-container {
-                max-width: 800px;
-                padding: 60px 50px;
-            }
-
-            body {
-                padding: 40px;
-            }
-
-            .feature {
-                padding: 25px;
-            }
-        }
-
-        /* ===== Плотность пикселей для Retina ===== */
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            .welcome-container {
-                box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5),
-                            0 0 60px rgba(102, 126, 234, 0.3);
-            }
-        }
-
-        /* ===== Предпочтение уменьшенного движения ===== */
         @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
+            *, *::before, *::after {
                 animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
-
-            .particles {
-                display: none;
-            }
+            .particles { display: none; }
         }
 
-        /* ===== Тёмная тема (по умолчанию) ===== */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-primary: #1a1a2e;
-                --bg-secondary: #16213e;
-                --bg-tertiary: #0f3460;
-            }
-        }
-
-        /* ===== Светлая тема ===== */
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-primary: #f0f2f5;
-                --bg-secondary: #e4e7eb;
-                --bg-tertiary: #d9dde2;
-                --text-primary: #1a1a2e;
-                --text-secondary: #4a5568;
-                --text-muted: #718096;
-            }
-
-            body {
-                background: linear-gradient(135deg, #e8ecf1 0%, #d9dde2 50%, #c8cdd6 100%);
-            }
-
-            .welcome-container {
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
-                border: 1px solid rgba(102, 126, 234, 0.2);
-            }
-
-            .feature {
-                background: rgba(255, 255, 255, 0.8);
-                border: 1px solid rgba(102, 126, 234, 0.15);
-            }
-
-            .feature:hover {
-                background: rgba(102, 126, 234, 0.1);
-            }
-
-            .scenarios-preview {
-                background: rgba(255, 255, 255, 0.5);
-            }
-        }
-
-        /* ===== Печать ===== */
         @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            .particles,
-            .start-btn,
-            .characters-showcase {
-                display: none;
-            }
-
-            .welcome-container {
-                box-shadow: none;
-                border: 1px solid #ccc;
-                max-width: 100%;
-                padding: 20px;
-            }
-
-            .features {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            h1 {
-                color: #000;
-                -webkit-text-fill-color: #000;
-            }
-        }
-
-        /* ===== Высокий контраст ===== */
-        @media (prefers-contrast: high) {
-            .welcome-container {
-                border: 2px solid #fff;
-            }
-
-            .feature {
-                border: 2px solid rgba(255, 255, 255, 0.5);
-            }
-
-            .start-btn {
-                border: 2px solid #fff;
-            }
+            body { background: white; padding: 0; }
+            .particles, .start-btn { display: none; }
+            .container { box-shadow: none; border: 1px solid #ccc; }
         }
     </style>
 </head>
 <body>
-    <!-- Анимированные частицы -->
     <div class="particles" id="particles" aria-hidden="true"></div>
 
-    <main class="welcome-container" role="main">
-        <div class="logo" aria-label="Логотип">🎭</div>
+    <main class="container" role="main">
+        <header class="header">
+            <div class="logo" aria-label="Логотип">🎭</div>
+            <h1>Симулятор — Коммуникативные навыки</h1>
+            <p class="specialty">Специальность: Технологии индустрии красоты</p>
+        </header>
 
-        <h1>Диалоговый Тренажёр</h1>
+        <div class="content-grid">
+            <section class="section description-full">
+                <h2>📖 Описание</h2>
+                <p>Тренажер предназначен для отработки коммуникативных навыков обучаемого при взаимодействии с посетителями салонов красоты. Создан с целью научить целевую аудиторию взаимодействию с различными типами темпераментов клиентов, вырабатывает поведенческие установки в непредвиденных и конфликтных ситуациях, повышает уровень коммуникативных компетенций.</p>
+            </section>
 
-        <p class="subtitle">
-            Отработайте навыки общения с клиентами в реальных конфликтных ситуациях.<br>
-            Выбирайте ответы мудро — от этого зависит удовлетворённость клиента!
-        </p>
+            <section class="section">
+                <h2>✨ Преимущества</h2>
+                <ul>
+                    <li>Обучает навыкам по решению проблем клиентов</li>
+                    <li>Вырабатывает поведенческие установки в непредвиденных и конфликтных ситуациях с различными типами темпераментов клиентов</li>
+                    <li>Повышает уровень коммуникативных компетенций</li>
+                </ul>
+            </section>
 
-        <!-- Персонажи -->
-        <div class="characters-showcase" aria-label="Примеры сценариев">
-            <div class="char-preview">
-                <span aria-hidden="true">⏱️</span>
-                <p>Длительность</p>
-            </div>
-            <div class="char-preview">
-                <span aria-hidden="true">✂️</span>
-                <p>Стрижка</p>
-            </div>
-            <div class="char-preview">
-                <span aria-hidden="true">💅</span>
-                <p>Маникюр</p>
-            </div>
+            <section class="section">
+                <h2>🚀 Возможности</h2>
+                <ul>
+                    <li>Позволяет подобрать ключ беседы для разрешения конфликтной ситуации наилучшим образом</li>
+                    <li>Обучает выстраивать стратегию общения для кратчайшего разрешения конфликта</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2>🎓 Рекомендован</h2>
+                <p>Для обучения студентов</p>
+            </section>
         </div>
 
-        <!-- Особенности -->
-        <section class="features" aria-label="Особенности тренажёра">
-            <article class="feature">
-                <div class="feature-icon" aria-hidden="true">💬</div>
-                <h3>Живые диалоги</h3>
-                <p>Общение как в настоящем мессенджере</p>
-            </article>
-            <article class="feature">
-                <div class="feature-icon" aria-hidden="true">🎯</div>
-                <h3>Ваш выбор важен</h3>
-                <p>Каждый ответ влияет на результат и оценку</p>
-            </article>
-            <article class="feature">
-                <div class="feature-icon" aria-hidden="true">📚</div>
-                <h3>3 сценария</h3>
-                <p>Реальные ситуации из индустрии красоты</p>
-            </article>
-            <article class="feature">
-                <div class="feature-icon" aria-hidden="true">🎨</div>
-                <h3>Профессиональные навыки</h3>
-                <p>Отработайте технику работы с клиентами</p>
-            </article>
-        </section>
-
-        <!-- Предпросмотр сценариев -->
-        <section class="scenarios-preview" aria-label="Доступные сценарии">
-            <h3>📖 Доступные сценарии</h3>
-            <div class="scenario-tags">
-                <span class="scenario-tag">⏱️ Недовольство длительностью</span>
-                <span class="scenario-tag">✂️ Недовольство стрижкой</span>
-                <span class="scenario-tag">💅 Отслойка покрытия</span>
-            </div>
-        </section>
-
-        <!-- Кнопка начала -->
-        <a href="start.html" class="start-btn" role="button" aria-label="Начать прохождение тренажёра">
-            🚀 Начать приключение
+        <a href="start.html" class="start-btn" role="button" aria-label="Начать симуляцию">
+            🚀 Начать симуляцию
         </a>
-
-        <p class="footer-note">Оптимально для мобильных устройств, планшетов и десктопов</p>
     </main>
 
     <script>
-        // Создание анимированных частиц с учётом производительности
         function createParticles() {
             const container = document.getElementById('particles');
-            
-            // Отключаем частицы на слабых устройствах
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                return;
-            }
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-            // Уменьшаем количество частиц для мобильных
             const isMobile = window.innerWidth < 600;
             const particleCount = isMobile ? 15 : 30;
 
@@ -804,21 +327,15 @@
             }
         }
 
-        // Инициализация после загрузки DOM
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', createParticles);
         } else {
             createParticles();
         }
 
-        // Оптимизация: пауза анимаций при неактивной вкладке
         document.addEventListener('visibilitychange', function() {
             const particles = document.querySelectorAll('.particle');
-            if (document.hidden) {
-                particles.forEach(p => p.style.animationPlayState = 'paused');
-            } else {
-                particles.forEach(p => p.style.animationPlayState = 'running');
-            }
+            particles.forEach(p => p.style.animationPlayState = document.hidden ? 'paused' : 'running');
         });
     </script>
 </body>
