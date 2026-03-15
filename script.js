@@ -31,7 +31,7 @@ function initDOMElements() {
     endingRestartBtn = document.getElementById('ending-restart-btn');
     endingScenarioBtn = document.getElementById('ending-scenario-btn');
     npcAvatarContainer = document.getElementById('npc-avatar-container');
-    
+
     // Создаём контейнер для предыстории
     backstoryContainer = document.createElement('div');
     backstoryContainer.className = 'backstory-message';
@@ -40,6 +40,11 @@ function initDOMElements() {
 
 // Добавление сообщения в чат
 function addMessage(text, sender, senderName) {
+    if (!chatMessages) {
+        console.error('chatMessages не найден');
+        return;
+    }
+
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}`;
 
@@ -61,14 +66,22 @@ function addMessage(text, sender, senderName) {
 
 // Очистка чата
 function clearChat() {
-    chatMessages.innerHTML = '';
+    if (chatMessages) {
+        chatMessages.innerHTML = '';
+    }
 }
 
 // Отрисовка персонажа
 function renderCharacter(container, avatarKey) {
+    if (!container) {
+        console.error('npcAvatarContainer не найден');
+        return;
+    }
     const svg = characterSVGs[avatarKey];
     if (svg) {
         container.innerHTML = svg;
+    } else {
+        console.error('SVG для аватара не найден:', avatarKey);
     }
 }
 
@@ -84,14 +97,14 @@ function initGame(scenarioKey = 'duration') {
 
     renderCharacter(npcAvatarContainer, scenario.npcAvatar);
 
-    endingModal.classList.remove('active');
-    scenarioSelector.classList.remove('active');
+    if (endingModal) endingModal.classList.remove('active');
+    if (scenarioSelector) scenarioSelector.classList.remove('active');
 
     clearChat();
-    
+
     // Добавляем предысторию
     showBackstory(scenario.backstory);
-    
+
     updateMood();
     updateRelationshipMeter();
 }
@@ -102,7 +115,7 @@ function showBackstory(backstory) {
         renderScene();
         return;
     }
-    
+
     const backstoryDiv = document.createElement('div');
     backstoryDiv.className = 'message backstory';
     backstoryDiv.innerHTML = `
@@ -111,7 +124,7 @@ function showBackstory(backstory) {
     `;
     chatMessages.appendChild(backstoryDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    
+
     // Показываем сцену через небольшую задержку
     setTimeout(() => {
         renderScene();
@@ -137,17 +150,23 @@ function updateMood() {
         emoji = "😞";
     }
 
-    npcMood.textContent = `${emoji} ${mood}`;
+    if (npcMood) {
+        npcMood.textContent = `${emoji} ${mood}`;
+    }
 }
 
 // Обновление индикатора (теперь показывает прогресс баллов)
 function updateRelationshipMeter() {
+    if (!relationshipMeter) return;
+
     // Максимальный возможный счёт примерно 60-70 баллов
     const maxScore = 60;
     const clampedScore = Math.max(0, Math.min(maxScore, gameState.score + 20));
     const percentage = (clampedScore / maxScore) * 100;
     relationshipMeter.style.width = `${percentage}%`;
-    relationshipValue.textContent = `${gameState.score} баллов`;
+    if (relationshipValue) {
+        relationshipValue.textContent = `${gameState.score} баллов`;
+    }
 }
 
 // Рендер сцены
@@ -159,20 +178,22 @@ function renderScene() {
     addMessage(scene.text, 'npc', scenario.npcName);
 
     // Создание кнопок выбора
-    choicesContainer.innerHTML = '';
+    if (choicesContainer) {
+        choicesContainer.innerHTML = '';
 
-    if (scene.isEnding) {
-        setTimeout(() => showEnding(scene), 1500);
-    } else {
-        gameState.isWaiting = false;
-        scene.choices.forEach((choice, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.textContent = choice.text;
-            btn.addEventListener('click', () => makeChoice(choice));
-            btn.style.animationDelay = `${index * 0.1}s`;
-            choicesContainer.appendChild(btn);
-        });
+        if (scene.isEnding) {
+            setTimeout(() => showEnding(scene), 1500);
+        } else {
+            gameState.isWaiting = false;
+            scene.choices.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice.text;
+                btn.addEventListener('click', () => makeChoice(choice));
+                btn.style.animationDelay = `${index * 0.1}s`;
+                choicesContainer.appendChild(btn);
+            });
+        }
     }
 
     updateMood();
@@ -198,7 +219,7 @@ function makeChoice(choice) {
     if (choice.nextScene) {
         setTimeout(() => {
             gameState.currentScene = choice.nextScene;
-            choicesContainer.innerHTML = '';
+            if (choicesContainer) choicesContainer.innerHTML = '';
             setTimeout(() => renderScene(), 1000);
         }, 800);
     }
@@ -206,7 +227,7 @@ function makeChoice(choice) {
 
 // Показ концовки
 function showEnding(scene) {
-    choicesContainer.innerHTML = '';
+    if (choicesContainer) choicesContainer.innerHTML = '';
     gameState.isWaiting = true;
 
     let title, color, rating;
@@ -231,49 +252,77 @@ function showEnding(scene) {
         rating = "Клиент крайне недоволен, готов жаловаться!";
     }
 
-    endingTitle.textContent = title;
-    endingTitle.style.color = color;
-    endingText.innerHTML = `<strong>${scene.endingText}</strong><br><br><em>${rating}</em>`;
-    endingRelationship.textContent = `${gameState.score} баллов`;
+    if (endingTitle) {
+        endingTitle.textContent = title;
+        endingTitle.style.color = color;
+    }
+    if (endingText) {
+        endingText.innerHTML = `<strong>${scene.endingText}</strong><br><br><em>${rating}</em>`;
+    }
+    if (endingRelationship) {
+        endingRelationship.textContent = `${gameState.score} баллов`;
+    }
 
     setTimeout(() => {
-        endingModal.classList.add('active');
+        if (endingModal) endingModal.classList.add('active');
     }, 300);
 }
 
 // Переключение селектора сценариев
 function toggleScenarioSelector() {
-    scenarioSelector.classList.toggle('active');
+    if (scenarioSelector) {
+        scenarioSelector.classList.toggle('active');
+    }
 }
 
 // Обработчики кнопок
 function initEventListeners() {
-    restartBtn.addEventListener('click', () => {
-        initGame(gameState.currentScenario);
-    });
-
-    scenarioBtn.addEventListener('click', toggleScenarioSelector);
-
-    scenarioOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            const scenarioKey = option.dataset.scenario;
-            initGame(scenarioKey);
+    if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+            initGame(gameState.currentScenario);
         });
-    });
+    }
 
-    endingRestartBtn.addEventListener('click', () => {
-        initGame(gameState.currentScenario);
-    });
+    if (scenarioBtn) {
+        scenarioBtn.addEventListener('click', toggleScenarioSelector);
+    }
 
-    endingScenarioBtn.addEventListener('click', () => {
-        endingModal.classList.remove('active');
-        toggleScenarioSelector();
-    });
+    if (scenarioOptions) {
+        scenarioOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const scenarioKey = option.dataset.scenario;
+                initGame(scenarioKey);
+            });
+        });
+    }
+
+    if (endingRestartBtn) {
+        endingRestartBtn.addEventListener('click', () => {
+            initGame(gameState.currentScenario);
+        });
+    }
+
+    if (endingScenarioBtn) {
+        endingScenarioBtn.addEventListener('click', () => {
+            if (endingModal) endingModal.classList.remove('active');
+            toggleScenarioSelector();
+        });
+    }
 }
 
-// Инициализация при загрузке
-window.addEventListener('load', () => {
+// Инициализация при загрузке - вызываем сразу
+function init() {
     initDOMElements();
     initEventListeners();
     initGame();
-});
+}
+
+// Проверяем, готов ли DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// Экспорт функции для внешнего вызова
+window.initGame = initGame;
