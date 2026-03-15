@@ -1414,8 +1414,14 @@ body {
         --bg-gradient: #e8ecf1;
         --bg-gradient-mid: #d9dde2;
         --bg-gradient-end: #c8cdd6;
+        --accent-primary: #4c5fc7;
+        --accent-secondary: #5a3d8a;
+        --accent-cyan: #0ea4d9;
         --text-primary: #1a1a2e;
         --text-secondary: #4a5568;
+        --text-muted: #718096;
+        --border-light: rgba(0, 0, 0, 0.1);
+        --border-accent: rgba(76, 95, 199, 0.3);
     }
 
     body {
