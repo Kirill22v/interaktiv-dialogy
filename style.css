@@ -1432,23 +1432,193 @@ body {
     .messenger-container {
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
         background-color: #ffffff;
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        border: 1px solid rgba(76, 95, 199, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15),
+                    0 0 60px rgba(76, 95, 199, 0.15);
     }
 
     .npc-panel {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-        background-color: rgba(102, 126, 234, 0.08);
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.1) 0%, rgba(90, 61, 138, 0.1) 100%);
+        background-color: rgba(76, 95, 199, 0.1);
+        border-color: rgba(76, 95, 199, 0.3);
     }
 
     .chat-window {
-        background: rgba(240, 242, 245, 0.9);
+        background: rgba(240, 242, 245, 0.95);
         background-color: #f0f2f5;
+        border: 1px solid rgba(0, 0, 0, 0.08);
     }
 
+    .chat-messages::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(76, 95, 199, 0.5);
+    }
+
+    /* Сообщения */
+    .message.npc {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.15) 0%, rgba(90, 61, 138, 0.15) 100%);
+        border: 1px solid rgba(76, 95, 199, 0.3);
+        color: #1a1a2e !important;
+    }
+
+    .message.player {
+        background: linear-gradient(135deg, rgba(14, 164, 217, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+        border: 1px solid rgba(14, 164, 217, 0.3);
+        color: #1a1a2e !important;
+    }
+
+    .message.backstory {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
+        border: 1px solid rgba(255, 193, 7, 0.4);
+        color: #b7791f !important;
+    }
+
+    .message.backstory .message-sender {
+        color: #d68910;
+    }
+
+    .message.backstory .message-text {
+        color: #9a6700;
+    }
+
+    .message-sender {
+        color: #4a5568 !important;
+    }
+
+    .message-text {
+        color: #1a1a2e !important;
+    }
+
+    /* Кнопки выбора */
+    .choice-btn {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.1) 0%, rgba(90, 61, 138, 0.1) 100%);
+        border-color: rgba(76, 95, 199, 0.3);
+        color: #2d3748;
+    }
+
+    .choice-btn:hover {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.2) 0%, rgba(90, 61, 138, 0.2) 100%);
+        border-color: rgba(76, 95, 199, 0.5);
+        color: #1a1a2e;
+    }
+
+    /* Подвал и область ввода */
+    .chat-input-area {
+        background: rgba(0, 0, 0, 0.05);
+        border-top-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-footer {
+        background: rgba(0, 0, 0, 0.08);
+        border-top-color: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Сценарии */
+    .scenario-selector {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .scenario-option {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.1) 0%, rgba(90, 61, 138, 0.1) 100%);
+        border-color: rgba(76, 95, 199, 0.25);
+        color: #2d3748;
+    }
+
+    .scenario-option:hover {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.2) 0%, rgba(90, 61, 138, 0.2) 100%);
+        border-color: rgba(76, 95, 199, 0.5);
+        color: #1a1a2e;
+    }
+
+    /* Тест */
     .test-container,
     .test-section {
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
         background-color: #ffffff;
+        border-color: rgba(76, 95, 199, 0.2);
+    }
+
+    .test-question {
+        background: rgba(0, 0, 0, 0.03);
+        border-color: rgba(76, 95, 199, 0.15);
+    }
+
+    .test-question:hover {
+        background: rgba(76, 95, 199, 0.08);
+        border-color: rgba(76, 95, 199, 0.3);
+    }
+
+    .question-text {
+        color: #2d3748;
+    }
+
+    .answer-option {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .answer-option:hover {
+        background: rgba(76, 95, 199, 0.15);
+    }
+
+    .answer-option span {
+        color: #2d3748;
+    }
+
+    .test-progress {
+        color: var(--accent-primary);
+    }
+
+    .result-score p {
+        color: #2d3748;
+    }
+
+    .result-recommendation p {
+        color: #2d3748;
+    }
+
+    /* Модальное окно */
+    .ending-content {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-color: rgba(76, 95, 199, 0.3);
+    }
+
+    .ending-content p {
+        color: #2d3748;
+    }
+
+    /* NPC панель */
+    .npc-name {
+        color: #1a1a2e !important;
+    }
+
+    .npc-mood {
+        color: #4a5568 !important;
+    }
+
+    #relationship-value {
+        color: #1a1a2e;
+    }
+
+    .mini-meter {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Кнопки */
+    .btn-restart,
+    .btn-scenario {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.6) 0%, rgba(90, 61, 138, 0.6) 100%);
+    }
+
+    .btn-restart:hover,
+    .btn-scenario:hover {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.8) 0%, rgba(90, 61, 138, 0.8) 100%);
+    }
+
+    #restart-test-btn {
+        background: linear-gradient(135deg, rgba(76, 95, 199, 0.6) 0%, rgba(90, 61, 138, 0.6) 100%);
     }
 }
 
