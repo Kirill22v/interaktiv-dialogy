@@ -12,7 +12,7 @@
     <link rel="shortcut icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="apple-touch-icon" href="./favicon.svg">
     <title>Симулятор — Коммуникативные навыки</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
     <div class="messenger-container">
@@ -24,11 +24,8 @@
         </header>
 
         <div class="chat-area">
-            <!-- Персонаж слева (NPC) -->
             <div class="npc-panel">
-                <div class="npc-avatar-large" id="npc-avatar-container">
-                    <!-- SVG персонаж будет добавлен через JS -->
-                </div>
+                <div class="npc-avatar-large" id="npc-avatar-container"></div>
                 <div class="npc-info">
                     <div class="npc-name" id="npc-name">Собеседник</div>
                     <div class="npc-mood" id="npc-mood">😊 Нейтрально</div>
@@ -42,16 +39,11 @@
                 </div>
             </div>
 
-            <!-- Окно чата -->
             <div class="chat-window">
-                <div class="chat-messages" id="chat-messages">
-                    <!-- Сообщения будут добавляться здесь -->
-                </div>
+                <div class="chat-messages" id="chat-messages"></div>
 
                 <div class="chat-input-area">
-                    <div class="choices-container" id="choices-container">
-                        <!-- Варианты ответов появятся здесь -->
-                    </div>
+                    <div class="choices-container" id="choices-container"></div>
                 </div>
 
                 <div class="chat-footer">
@@ -67,20 +59,19 @@
                 <button class="scenario-option" data-scenario="duration">⏱️ Недовольство длительностью процедуры</button>
                 <button class="scenario-option" data-scenario="haircut">✂️ Недовольство результатом стрижки</button>
                 <button class="scenario-option" data-scenario="manicure">💅 Отслойка покрытия после маникюра</button>
+                <button class="scenario-option" data-scenario="nailDesign">💅 Конфликт из-за несогласованного дизайна</button>
+                <button class="scenario-option" data-scenario="clientRedistribution">👥 Конфликт из-за перераспределения клиентов</button>
+                <button class="scenario-option" data-scenario="equipmentDispute">🔥 Спор из-за оборудования</button>
+                <button class="scenario-option" data-scenario="clientLate">⏰ Спор из-за опоздания клиента</button>
             </div>
         </div>
     </div>
 
-    <!-- Тест -->
     <div class="test-section" id="test-section">
         <div class="test-container">
             <h2>📋 Тест</h2>
             <p class="test-description">Ответьте на вопросы, чтобы лучше понять себя</p>
-
-            <div class="test-questions" id="test-questions">
-                <!-- Вопросы будут добавлены через JS -->
-            </div>
-
+            <div class="test-questions" id="test-questions"></div>
             <button class="btn btn-test" id="show-test-btn">📋 Пройти тест</button>
             <button class="btn btn-submit" id="submit-test-btn">✅ Показать результат</button>
         </div>
@@ -104,12 +95,10 @@
         </div>
     </div>
 
-    <script src="dialogues.js?v=7"></script>
-    <script src="script.js?v=3"></script>
-    <script>
-        // Ждём загрузки DOM перед инициализацией теста
+    <script src="dialogues.js?v=13" charset="UTF-8"></script>
+    <script src="script.js?v=11" charset="UTF-8"></script>
+    <script charset="UTF-8">
         document.addEventListener('DOMContentLoaded', function() {
-            // Данные теста
             const testQuestions = [
             { id: 1, text: "Я думаю, что меня недооценивают в коллективе" },
             { id: 2, text: "Я стараюсь работать, учиться, даже если бываю не совсем здоров" },
@@ -140,7 +129,6 @@
         let testAnswers = {};
         let currentQuestionIndex = 0;
 
-        const testSection = document.getElementById('test-section');
         const testQuestionsContainer = document.getElementById('test-questions');
         const showTestBtn = document.getElementById('show-test-btn');
         const submitTestBtn = document.getElementById('submit-test-btn');
@@ -148,66 +136,50 @@
         const resultContent = document.getElementById('result-content');
         const restartTestBtn = document.getElementById('restart-test-btn');
 
-        // Отрисовка текущего вопроса
         function renderQuestion(index) {
             testQuestionsContainer.innerHTML = '';
-            
             if (index >= testQuestions.length) {
-                // Все вопросы отвечены, показываем кнопку результата
                 submitTestBtn.classList.add('active');
                 return;
             }
-
             const q = testQuestions[index];
             const questionDiv = document.createElement('div');
             questionDiv.className = 'test-question';
             questionDiv.style.animation = 'slideUp 0.3s ease';
-
             const questionText = document.createElement('p');
             questionText.className = 'question-text';
             questionText.textContent = `${index + 1}. ${q.text}`;
-
             const answersDiv = document.createElement('div');
             answersDiv.className = 'question-answers';
-
             answerOptions.forEach(opt => {
                 const label = document.createElement('label');
                 label.className = 'answer-option';
-
                 const radio = document.createElement('input');
                 radio.type = 'radio';
                 radio.name = `question-${q.id}`;
                 radio.value = opt.value;
-
                 radio.addEventListener('change', () => {
                     testAnswers[q.id] = opt.value;
-                    // Переход к следующему вопросу через небольшую задержку
                     setTimeout(() => {
                         currentQuestionIndex++;
                         renderQuestion(currentQuestionIndex);
                     }, 300);
                 });
-
                 const span = document.createElement('span');
                 span.textContent = opt.text;
-
                 label.appendChild(radio);
                 label.appendChild(span);
                 answersDiv.appendChild(label);
             });
-
-            // Прогресс
             const progressDiv = document.createElement('div');
             progressDiv.className = 'test-progress';
             progressDiv.textContent = `Вопрос ${index + 1} из ${testQuestions.length}`;
-
             questionDiv.appendChild(progressDiv);
             questionDiv.appendChild(questionText);
             questionDiv.appendChild(answersDiv);
             testQuestionsContainer.appendChild(questionDiv);
         }
 
-        // Инициализация теста
         function initTest() {
             testAnswers = {};
             currentQuestionIndex = 0;
@@ -215,31 +187,29 @@
             testResult.classList.remove('active');
         }
 
-        // Показать тест
-        showTestBtn.addEventListener('click', () => {
-            testQuestionsContainer.classList.add('active');
-            showTestBtn.classList.add('hidden');
-            submitTestBtn.classList.remove('active');
-            initTest();
-        });
+        if (showTestBtn) {
+            showTestBtn.addEventListener('click', () => {
+                testQuestionsContainer.classList.add('active');
+                showTestBtn.classList.add('hidden');
+                submitTestBtn.classList.remove('active');
+                initTest();
+            });
+        }
 
-        // Отправить тест
-        submitTestBtn.addEventListener('click', () => {
-            showTestResult();
-        });
+        if (submitTestBtn) {
+            submitTestBtn.addEventListener('click', () => {
+                showTestResult();
+            });
+        }
 
-        // Показать результат
         function showTestResult() {
             let totalScore = 0;
             Object.values(testAnswers).forEach(value => {
                 totalScore += value;
             });
-
             const maxScore = testQuestions.length * 3;
             const percentage = (totalScore / maxScore) * 100;
-
             let resultText, resultColor, recommendation;
-
             if (percentage <= 40) {
                 resultText = "Низкий уровень стресса";
                 resultColor = "#48dbfb";
@@ -257,7 +227,6 @@
                 resultColor = "#ff6b6b";
                 recommendation = "Рекомендуется обратиться к специалисту для получения профессиональной поддержки.";
             }
-
             resultContent.innerHTML = `
                 <div class="result-score">
                     <p><strong>Суммарный балл:</strong> ${totalScore} из ${maxScore}</p>
@@ -270,32 +239,21 @@
                     <p>${recommendation}</p>
                 </div>
             `;
-
             testResult.classList.add('active');
             testQuestionsContainer.classList.remove('active');
             submitTestBtn.classList.remove('active');
         }
 
-        // Пройти заново
-        restartTestBtn.addEventListener('click', () => {
-            testResult.classList.remove('active');
-            testQuestionsContainer.classList.add('active');
-            submitTestBtn.classList.remove('active');
-            showTestBtn.classList.remove('hidden');
-            initTest();
-        });
-
-        // НЕ инициализируем тест при загрузке - он должен быть скрыт
+        if (restartTestBtn) {
+            restartTestBtn.addEventListener('click', () => {
+                testResult.classList.remove('active');
+                testQuestionsContainer.classList.add('active');
+                submitTestBtn.classList.remove('active');
+                showTestBtn.classList.remove('hidden');
+                initTest();
+            });
+        }
     });
-
-    // iOS Safari фикс для viewport height
-    function setVhProperty() {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', vh + 'px');
-    }
-    
-    window.addEventListener('resize', setVhProperty);
-    setVhProperty();
     </script>
 </body>
 </html>
